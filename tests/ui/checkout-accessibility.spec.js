@@ -31,6 +31,10 @@ test.describe('T12 checkout accessibility semantics', () => {
 
   test('a successful quote is announced in an accessible status region', async ({ page }) => {
     await page.goto('/checkout.html');
+    // Loyalty tier: its 5000-cent free-shipping threshold is unchanged by
+    // the tiered-shipping-policy target, keeping this accessibility check
+    // independent of which tier's threshold value is currently configured.
+    await page.getByTestId('customer-type').selectOption('loyalty');
     await page.getByTestId('qty-input-SKU-006').fill('2');
     await page.getByRole('button', { name: /get shipping quote/i }).click();
 
