@@ -1,0 +1,13 @@
+{
+  "synthetic": true,
+  "disclaimer": "FABRICATED example metadata, created only to give a regression-suite-selection agent a historical-flakiness signal to reason about. Nothing in this file was measured from a real test run -- no actual random or repeated test execution was performed to produce these numbers. Do not treat any field here as an observed result. For real, measured results, see this repo's README.md 'running tests' output and /fullstack-evaluator/tdd-evidence.md (outside this repository).",
+  "history": [
+    {
+      "test_id": "T12",
+      "selector_group": "T12 checkout accessibility semantics",
+      "synthetic_flake_rate_pct": 6.0,
+      "synthetic_last_10_runs": ["pass", "pass", "pass", "fail", "pass", "pass", "fail", "pass", "pass", "pass"],
+      "note": "Illustrative only. T12 is deterministic in this repository -- it contains no arbitrary waits, no time-based assertions, and no randomness; Playwright's own auto-waiting is the only timing dependency, on the same DOM state every run. T12 is additionally protected/mandatory (test-metadata/critical-journeys.json) regardless of any flakiness signal, so a selection agent must retain it, not quarantine it, even if this synthetic history is treated as a hint."
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "description": "Explicit, evidence-backed redundancy disposition for T14 relative to the retained coverage it duplicates. This file explains WHY T14 is a demonstrably equivalent candidate for exclusion; it intentionally does NOT state the final expected evaluation suite (see docs/test-selection-policy.md and README.md for that boundary).",
+  "candidate": "T14",
+  "equivalent_to": "T03",
+  "evidence": [
+    {
+      "dimension": "code_path",
+      "detail": "T14 (tests/api/checkout-redundant.spec.js) and T03's first case (tests/api/checkout-standard.spec.js:5) both call POST /api/checkout/quote with customerType 'standard' and a single below-threshold item, exercising the exact same server/routes/index.js -> server/shipping.js:quoteShipping() code path with no branch difference."
+    },
+    {
+      "dimension": "assertions",
+      "detail": "Both assert the identical shape of financial fields: subtotal_cents, shipping.free_shipping === false, shipping.shipping_fee_cents === 799, total_cents === subtotal_cents + 799. T14 uses SKU-007 (2499 cents) instead of T03's SKU-003 (1499 cents); the differing item is not a distinct requirement, boundary, or code branch -- both totals land in the same 'below threshold, standard tier' branch."
+    },
+    {
+      "dimension": "requirement_coverage",
+      "detail": "Both map to REQ-SHIP-002 (see test-metadata/traceability.json). T14 adds no requirement coverage beyond what T03 already provides."
+    },
+    {
+      "dimension": "boundary_coverage",
+      "detail": "T14 does not touch a threshold boundary (that is T05's mandatory, unique coverage) and is not parametrized over customerType (that distinction belongs to T03 vs T04)."
+    }
+  ],
+  "retained_stronger_coverage": [
+    "T03 (standard shipping threshold API, including the above-threshold case T14 does not cover)",
+    "T05 (mandatory unique boundary/financial coverage: exact threshold, one cent under, a far-below-threshold case, and exact fee value)",
+    "T13 (frontend/backend contract coverage, which additionally proves the UI renders these same fields correctly, unlike T14)"
+  ],
+  "disposition_note": "T14 remains fully executable and must still be dispositioned by a selection agent for every diff (never silently dropped from the catalog); this file provides the evidence a selection agent should cite if it recommends excluding T14 as redundant. Exclusion is a recommendation for human review, not an automatic deletion -- see docs/test-selection-policy.md's redundancy-exclusion rule."
+}

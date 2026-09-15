@@ -1,0 +1,10 @@
+{
+  "standard": {
+    "free_shipping_threshold_cents": 5000,
+    "flat_fee_cents": 799
+  },
+  "loyalty": {
+    "free_shipping_threshold_cents": 5000,
+    "flat_fee_cents": 799
+  }
+}

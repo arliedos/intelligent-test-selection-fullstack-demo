@@ -1,0 +1,496 @@
+{
+  "description": "Machine-readable ShopSphere catalogue. Every Playwright-collected test maps to exactly one group T01-T15 or A01; metadata integrity is verified by scripts/verify-metadata.js. Selectors mirror normalized Playwright list output.",
+  "groups": [
+    {
+      "id": "T01",
+      "title": "backend health smoke",
+      "layer": "backend-api",
+      "components": [
+        "shopsphere.server.health"
+      ],
+      "requirements": [
+        "REQ-HEALTH-001"
+      ],
+      "journeys": [],
+      "mandatory": true,
+      "criticality": "critical",
+      "synthetic_historical_signal": {
+        "flaky": false
+      },
+      "prerequisites": [
+        "server running"
+      ],
+      "owner_role": "backend-engineer",
+      "selectors": [
+        "[api] › api/health.spec.js:6:3 › T01 backend health smoke › GET /api/health returns ok status",
+        "[api] › api/health.spec.js:14:3 › T01 backend health smoke › server binds to the loopback address (127.0.0.1) by default, not the wildcard address",
+        "[api] › api/health.spec.js:34:3 › T01 backend health smoke › server honors an explicit HOST override"
+      ]
+    },
+    {
+      "id": "T02",
+      "title": "product catalogue API",
+      "layer": "backend-api",
+      "components": [
+        "shopsphere.server.products"
+      ],
+      "requirements": [
+        "REQ-CATALOGUE-001"
+      ],
+      "journeys": [],
+      "mandatory": false,
+      "criticality": "low",
+      "synthetic_historical_signal": {
+        "flaky": false
+      },
+      "prerequisites": [
+        "server running"
+      ],
+      "owner_role": "backend-engineer",
+      "selectors": [
+        "[api] › api/products.spec.js:5:3 › T02 product catalogue API › GET /api/products returns the deterministic in-memory catalogue",
+        "[api] › api/products.spec.js:27:3 › T02 product catalogue API › GET /api/products is stable across repeated calls"
+      ]
+    },
+    {
+      "id": "T03",
+      "title": "standard shipping threshold API",
+      "layer": "backend-api",
+      "components": [
+        "shopsphere.server.checkout",
+        "shopsphere.server.shipping",
+        "shopsphere.config.shipping-policy"
+      ],
+      "requirements": [
+        "REQ-SHIP-002",
+        "REQ-SHIP-004"
+      ],
+      "journeys": [],
+      "mandatory": false,
+      "criticality": "high",
+      "synthetic_historical_signal": {
+        "flaky": false
+      },
+      "prerequisites": [
+        "server running",
+        "shipping-policy.json loaded"
+      ],
+      "owner_role": "backend-engineer",
+      "selectors": [
+        "[api] › api/checkout-standard.spec.js:5:3 › T03 standard shipping threshold API › standard customer below threshold pays the flat shipping fee",
+        "[api] › api/checkout-standard.spec.js:21:3 › T03 standard shipping threshold API › standard customer at or above threshold gets free shipping"
+      ]
+    },
+    {
+      "id": "T04",
+      "title": "loyalty shipping threshold API",
+      "layer": "backend-api",
+      "components": [
+        "shopsphere.server.checkout",
+        "shopsphere.server.shipping",
+        "shopsphere.config.shipping-policy"
+      ],
+      "requirements": [
+        "REQ-SHIP-003",
+        "REQ-SHIP-004"
+      ],
+      "journeys": [],
+      "mandatory": false,
+      "criticality": "high",
+      "synthetic_historical_signal": {
+        "flaky": false
+      },
+      "prerequisites": [
+        "server running",
+        "shipping-policy.json loaded"
+      ],
+      "owner_role": "backend-engineer",
+      "selectors": [
+        "[api] › api/checkout-loyalty.spec.js:5:3 › T04 loyalty shipping threshold API › loyalty customer below threshold pays the flat shipping fee",
+        "[api] › api/checkout-loyalty.spec.js:21:3 › T04 loyalty shipping threshold API › loyalty customer at or above threshold gets free shipping"
+      ]
+    },
+    {
+      "id": "T05",
+      "title": "shipping boundary and fee correctness",
+      "layer": "backend-api",
+      "components": [
+        "shopsphere.server.checkout",
+        "shopsphere.server.shipping",
+        "shopsphere.config.shipping-policy"
+      ],
+      "requirements": [
+        "REQ-SHIP-005",
+        "REQ-SHIP-004"
+      ],
+      "journeys": [],
+      "mandatory": true,
+      "criticality": "critical",
+      "synthetic_historical_signal": {
+        "flaky": false
+      },
+      "prerequisites": [
+        "server running",
+        "shipping-policy.json loaded"
+      ],
+      "owner_role": "backend-engineer",
+      "selectors": [
+        "[api] › api/checkout-boundary.spec.js:9:3 › T05 shipping boundary and fee correctness › subtotal exactly at the threshold (5000 cents) is free shipping",
+        "[api] › api/checkout-boundary.spec.js:24:3 › T05 shipping boundary and fee correctness › subtotal one cent under the threshold (4999 cents) is not free shipping",
+        "[api] › api/checkout-boundary.spec.js:41:3 › T05 shipping boundary and fee correctness › far-below-threshold subtotal returns the correct fee and remaining amount",
+        "[api] › api/checkout-boundary.spec.js:54:3 › T05 shipping boundary and fee correctness › flat shipping fee is exactly 799 cents whenever shipping is not free"
+      ]
+    },
+    {
+      "id": "T06",
+      "title": "malformed checkout/cart validation",
+      "layer": "backend-api",
+      "components": [
+        "shopsphere.server.checkout"
+      ],
+      "requirements": [
+        "REQ-CHECKOUT-VALID-001"
+      ],
+      "journeys": [],
+      "mandatory": false,
+      "criticality": "high",
+      "synthetic_historical_signal": {
+        "flaky": false
+      },
+      "prerequisites": [
+        "server running"
+      ],
+      "owner_role": "backend-engineer",
+      "selectors": [
+        "[api] › api/checkout-validation.spec.js:29:3 › T06 malformed checkout/cart validation › missing customerType is rejected with 400 and no stack trace",
+        "[api] › api/checkout-validation.spec.js:38:3 › T06 malformed checkout/cart validation › invalid customerType value is rejected with 400",
+        "[api] › api/checkout-validation.spec.js:47:3 › T06 malformed checkout/cart validation › missing items array is rejected with 400",
+        "[api] › api/checkout-validation.spec.js:54:3 › T06 malformed checkout/cart validation › non-array items is rejected with 400",
+        "[api] › api/checkout-validation.spec.js:61:3 › T06 malformed checkout/cart validation › empty items array is rejected with 400",
+        "[api] › api/checkout-validation.spec.js:68:3 › T06 malformed checkout/cart validation › unknown sku is rejected with 400 and no stack trace",
+        "[api] › api/checkout-validation.spec.js:78:3 › T06 malformed checkout/cart validation › zero quantity is rejected with 400",
+        "[api] › api/checkout-validation.spec.js:85:3 › T06 malformed checkout/cart validation › negative quantity is rejected with 400",
+        "[api] › api/checkout-validation.spec.js:92:3 › T06 malformed checkout/cart validation › non-integer quantity is rejected with 400",
+        "[api] › api/checkout-validation.spec.js:99:3 › T06 malformed checkout/cart validation › item missing sku is rejected with 400",
+        "[api] › api/checkout-validation.spec.js:106:3 › T06 malformed checkout/cart validation › oversized request body is rejected with 413 and no stack trace",
+        "[api] › api/checkout-validation.spec.js:119:3 › T06 malformed checkout/cart validation › malformed JSON body is rejected with 400, not 500",
+        "[api] › api/checkout-validation.spec.js:127:3 › T06 malformed checkout/cart validation › an unsafe-integer quantity (beyond Number.MAX_SAFE_INTEGER) is rejected with 400",
+        "[api] › api/checkout-validation.spec.js:136:3 › T06 malformed checkout/cart validation › a quantity beyond the realistic per-item maximum is rejected with 400",
+        "[api] › api/checkout-validation.spec.js:145:3 › T06 malformed checkout/cart validation › an item count beyond the realistic maximum is rejected with 400",
+        "[api] › api/checkout-validation.spec.js:155:3 › T06 malformed checkout/cart validation › checked safe arithmetic rejects a multiplication that would exceed Number.MAX_SAFE_INTEGER",
+        "[api] › api/checkout-validation.spec.js:170:3 › T06 malformed checkout/cart validation › the shared error handler returns a generic 500 for an unrecognized/unexpected error, without leaking its message or stack",
+        "[api] › api/checkout-validation.spec.js:184:3 › T06 malformed checkout/cart validation › the shared error handler still returns the recognized 4xx status/message for a ValidationError",
+        "[api] › api/checkout-validation.spec.js:194:3 › T06 malformed checkout/cart validation › the shared error handler still returns 413 for an oversized-body error and 400 for a malformed-JSON error"
+      ]
+    },
+    {
+      "id": "T07",
+      "title": "catalogue frontend rendering",
+      "layer": "frontend-ui",
+      "components": [
+        "shopsphere.frontend.catalogue",
+        "shopsphere.server.products"
+      ],
+      "requirements": [
+        "REQ-CATALOGUE-001"
+      ],
+      "journeys": [],
+      "mandatory": false,
+      "criticality": "low",
+      "synthetic_historical_signal": {
+        "flaky": false
+      },
+      "prerequisites": [
+        "server running"
+      ],
+      "owner_role": "frontend-engineer",
+      "selectors": [
+        "[ui] › ui/catalogue.spec.js:5:3 › T07 catalogue frontend rendering › catalogue page lists all products from the real API",
+        "[ui] › ui/catalogue.spec.js:18:3 › T07 catalogue frontend rendering › catalogue page has a nav link to checkout and profile",
+        "[ui] › ui/catalogue.spec.js:24:3 › T07 catalogue frontend rendering › a network-level failure loading products shows an accessible error instead of failing silently"
+      ]
+    },
+    {
+      "id": "T08",
+      "title": "standard checkout shipping frontend",
+      "layer": "frontend-ui",
+      "components": [
+        "shopsphere.frontend.checkout",
+        "shopsphere.server.checkout"
+      ],
+      "requirements": [
+        "REQ-UI-CHECKOUT-001",
+        "REQ-SHIP-002"
+      ],
+      "journeys": [],
+      "mandatory": false,
+      "criticality": "high",
+      "synthetic_historical_signal": {
+        "flaky": false
+      },
+      "prerequisites": [
+        "server running",
+        "shipping-policy.json loaded"
+      ],
+      "owner_role": "frontend-engineer",
+      "selectors": [
+        "[ui] › ui/checkout-standard.spec.js:5:3 › T08 standard checkout shipping frontend › standard customer below threshold sees the flat shipping fee and $50 threshold messaging",
+        "[ui] › ui/checkout-standard.spec.js:20:3 › T08 standard checkout shipping frontend › standard customer at threshold sees free shipping"
+      ]
+    },
+    {
+      "id": "T09",
+      "title": "loyalty checkout shipping frontend",
+      "layer": "frontend-ui",
+      "components": [
+        "shopsphere.frontend.checkout",
+        "shopsphere.server.checkout"
+      ],
+      "requirements": [
+        "REQ-UI-CHECKOUT-001",
+        "REQ-SHIP-003"
+      ],
+      "journeys": [],
+      "mandatory": false,
+      "criticality": "high",
+      "synthetic_historical_signal": {
+        "flaky": false
+      },
+      "prerequisites": [
+        "server running",
+        "shipping-policy.json loaded"
+      ],
+      "owner_role": "frontend-engineer",
+      "selectors": [
+        "[ui] › ui/checkout-loyalty.spec.js:5:3 › T09 loyalty checkout shipping frontend › loyalty customer below threshold sees the flat shipping fee",
+        "[ui] › ui/checkout-loyalty.spec.js:16:3 › T09 loyalty checkout shipping frontend › loyalty customer at threshold sees free shipping"
+      ]
+    },
+    {
+      "id": "T10",
+      "title": "profile frontend/API",
+      "layer": "fullstack",
+      "components": [
+        "shopsphere.frontend.profile",
+        "shopsphere.server.profile"
+      ],
+      "requirements": [
+        "REQ-PROFILE-001"
+      ],
+      "journeys": [],
+      "mandatory": false,
+      "criticality": "low",
+      "synthetic_historical_signal": {
+        "flaky": false
+      },
+      "prerequisites": [
+        "server running"
+      ],
+      "owner_role": "fullstack-engineer",
+      "selectors": [
+        "[api] › api/profile.spec.js:5:3 › T10 profile frontend/API (API half) › GET /api/profile returns the seeded demo profile by default",
+        "[api] › api/profile.spec.js:16:3 › T10 profile frontend/API (API half) › GET /api/profile?id=unknown-id returns 404",
+        "[api] › api/profile.spec.js:21:3 › T10 profile frontend/API (API half) › PUT /api/profile?id=<unique> creates/updates a profile independent of other tests",
+        "[api] › api/profile.spec.js:35:3 › T10 profile frontend/API (API half) › PUT /api/profile rejects an invalid email with 400",
+        "[api] › api/profile.spec.js:43:3 › T10 profile frontend/API (API half) › PUT /api/profile rejects an empty name with 400",
+        "[ui] › ui/profile.spec.js:5:3 › T10 profile frontend/API (UI half) › profile page pre-fills the default seeded profile",
+        "[ui] › ui/profile.spec.js:12:3 › T10 profile frontend/API (UI half) › profile page creates and saves a new profile for an unknown id, independent of other tests",
+        "[ui] › ui/profile.spec.js:29:3 › T10 profile frontend/API (UI half) › profile page shows a validation error for an invalid email",
+        "[ui] › ui/profile.spec.js:39:3 › T10 profile frontend/API (UI half) › a network-level failure loading the profile shows an accessible error instead of failing silently"
+      ]
+    },
+    {
+      "id": "T11",
+      "title": "critical checkout journey UI-to-API",
+      "layer": "fullstack",
+      "components": [
+        "shopsphere.frontend.catalogue",
+        "shopsphere.frontend.checkout",
+        "shopsphere.server.checkout",
+        "shopsphere.server.shipping"
+      ],
+      "requirements": [
+        "REQ-JOURNEY-001"
+      ],
+      "journeys": [
+        "CJ01"
+      ],
+      "mandatory": true,
+      "criticality": "critical",
+      "synthetic_historical_signal": {
+        "flaky": false
+      },
+      "prerequisites": [
+        "server running",
+        "products catalogue seeded"
+      ],
+      "owner_role": "fullstack-engineer",
+      "selectors": [
+        "[ui] › e2e/critical-checkout-journey.spec.js:7:3 › T11 critical checkout journey UI-to-API › user browses the catalogue, then gets an accurate shipping quote at checkout"
+      ]
+    },
+    {
+      "id": "T12",
+      "title": "checkout accessibility semantics",
+      "layer": "frontend-ui",
+      "components": [
+        "shopsphere.frontend.checkout"
+      ],
+      "requirements": [
+        "REQ-UI-CHECKOUT-A11Y-001"
+      ],
+      "journeys": [
+        "CJ01"
+      ],
+      "mandatory": true,
+      "criticality": "critical",
+      "synthetic_historical_signal": {
+        "flaky": true,
+        "synthetic": true,
+        "source": "test-metadata/synthetic-execution-history.json",
+        "note": "Fabricated illustrative flakiness signal only; this Playwright test is itself fully deterministic (no waits on network timing beyond Playwright's own auto-waiting, no randomness)."
+      },
+      "prerequisites": [
+        "server running"
+      ],
+      "owner_role": "frontend-engineer",
+      "selectors": [
+        "[ui] › ui/checkout-accessibility.spec.js:10:3 › T12 checkout accessibility semantics › checkout page exposes landmarks, labelled controls, and live regions",
+        "[ui] › ui/checkout-accessibility.spec.js:23:3 › T12 checkout accessibility semantics › submitting with no items announces an accessible alert",
+        "[ui] › ui/checkout-accessibility.spec.js:32:3 › T12 checkout accessibility semantics › a successful quote is announced in an accessible status region",
+        "[ui] › ui/checkout-accessibility.spec.js:42:3 › T12 checkout accessibility semantics › a network-level failure loading products shows an accessible error instead of failing silently",
+        "[ui] › ui/checkout-accessibility.spec.js:51:3 › T12 checkout accessibility semantics › a network-level failure submitting a quote shows an accessible error instead of failing silently"
+      ]
+    },
+    {
+      "id": "T13",
+      "title": "frontend/backend shipping contract",
+      "layer": "fullstack",
+      "components": [
+        "shopsphere.frontend.checkout",
+        "shopsphere.server.checkout",
+        "shopsphere.server.shipping"
+      ],
+      "requirements": [
+        "REQ-CONTRACT-001"
+      ],
+      "journeys": [],
+      "mandatory": false,
+      "criticality": "high",
+      "synthetic_historical_signal": {
+        "flaky": false
+      },
+      "prerequisites": [
+        "server running",
+        "shipping-policy.json loaded"
+      ],
+      "owner_role": "fullstack-engineer",
+      "selectors": [
+        "[ui] › contract/shipping-contract.spec.js:17:3 › T13 frontend/backend shipping contract › below-threshold quote: UI subtotal/fee/total/free-shipping-state exactly match the API contract",
+        "[ui] › contract/shipping-contract.spec.js:35:3 › T13 frontend/backend shipping contract › at-threshold quote: UI subtotal/fee/total/free-shipping-state exactly match the API contract"
+      ]
+    },
+    {
+      "id": "T14",
+      "title": "redundant happy-path API quote",
+      "layer": "backend-api",
+      "components": [
+        "shopsphere.server.checkout",
+        "shopsphere.server.shipping"
+      ],
+      "requirements": [
+        "REQ-SHIP-002"
+      ],
+      "journeys": [],
+      "mandatory": false,
+      "criticality": "low",
+      "synthetic_historical_signal": {
+        "flaky": false
+      },
+      "prerequisites": [
+        "server running",
+        "shipping-policy.json loaded"
+      ],
+      "owner_role": "backend-engineer",
+      "redundancy": {
+        "demonstrably_equivalent_to": "T03",
+        "evidence_ref": "test-metadata/redundancy-evidence.json"
+      },
+      "selectors": [
+        "[api] › api/checkout-redundant.spec.js:10:3 › T14 redundant happy-path API quote › standard customer below threshold pays the flat shipping fee (equivalent to T03)"
+      ]
+    },
+    {
+      "id": "T15",
+      "title": "shipping-policy runtime validation",
+      "layer": "backend-api",
+      "components": [
+        "shopsphere.server.shipping",
+        "shopsphere.config.shipping-policy"
+      ],
+      "requirements": [
+        "REQ-SHIP-001"
+      ],
+      "journeys": [],
+      "mandatory": false,
+      "criticality": "high",
+      "synthetic_historical_signal": {
+        "flaky": false
+      },
+      "prerequisites": [
+        "Node.js runtime",
+        "shipping-policy configuration"
+      ],
+      "owner_role": "backend-engineer",
+      "selectors": [
+        "[api] › api/shipping-policy-validation.spec.js:25:3 › T15 shipping-policy runtime validation › a valid policy passes validation unchanged",
+        "[api] › api/shipping-policy-validation.spec.js:33:3 › T15 shipping-policy runtime validation › a missing tier is rejected",
+        "[api] › api/shipping-policy-validation.spec.js:38:3 › T15 shipping-policy runtime validation › a malformed (non-object) policy is rejected",
+        "[api] › api/shipping-policy-validation.spec.js:44:3 › T15 shipping-policy runtime validation › a malformed (non-object) tier is rejected",
+        "[api] › api/shipping-policy-validation.spec.js:49:3 › T15 shipping-policy runtime validation › a negative threshold is rejected",
+        "[api] › api/shipping-policy-validation.spec.js:57:3 › T15 shipping-policy runtime validation › a non-integer threshold is rejected",
+        "[api] › api/shipping-policy-validation.spec.js:65:3 › T15 shipping-policy runtime validation › an unsafe-integer threshold (beyond Number.MAX_SAFE_INTEGER) is rejected",
+        "[api] › api/shipping-policy-validation.spec.js:73:3 › T15 shipping-policy runtime validation › a negative fee is rejected",
+        "[api] › api/shipping-policy-validation.spec.js:81:3 › T15 shipping-policy runtime validation › an unsafe-integer fee (beyond Number.MAX_SAFE_INTEGER) is rejected",
+        "[api] › api/shipping-policy-validation.spec.js:89:3 › T15 shipping-policy runtime validation › loadShippingPolicy throws for a missing config file",
+        "[api] › api/shipping-policy-validation.spec.js:94:3 › T15 shipping-policy runtime validation › loadShippingPolicy throws for malformed JSON content",
+        "[api] › api/shipping-policy-validation.spec.js:99:3 › T15 shipping-policy runtime validation › loadShippingPolicy successfully loads and validates a well-formed custom policy file",
+        "[api] › api/shipping-policy-validation.spec.js:107:3 › T15 shipping-policy runtime validation › the process fails fast at startup when SHIPPING_POLICY_PATH points at an invalid policy",
+        "[api] › api/shipping-policy-validation.spec.js:117:3 › T15 shipping-policy runtime validation › the process starts cleanly at startup when SHIPPING_POLICY_PATH points at a valid policy"
+      ]
+    },
+    {
+      "id": "A01",
+      "title": "metadata-integrity validation",
+      "layer": "quality",
+      "components": [
+        "scripts.verify-metadata"
+      ],
+      "requirements": [
+        "REQ-META-001"
+      ],
+      "journeys": [],
+      "mandatory": false,
+      "criticality": "medium",
+      "synthetic_historical_signal": {
+        "flaky": false
+      },
+      "prerequisites": [
+        "playwright test --list must succeed"
+      ],
+      "owner_role": "qa-engineer",
+      "selectors": [
+        "[api] › quality/verify-metadata.spec.js:20:3 › A01 metadata-integrity validation › catalog selectors exactly match real Playwright collection",
+        "[api] › quality/verify-metadata.spec.js:32:3 › A01 metadata-integrity validation › detects a selector collected but missing from the catalog",
+        "[api] › quality/verify-metadata.spec.js:42:3 › A01 metadata-integrity validation › detects a catalogued selector not actually collected",
+        "[api] › quality/verify-metadata.spec.js:52:3 › A01 metadata-integrity validation › detects a duplicate selector within the catalog",
+        "[api] › quality/verify-metadata.spec.js:61:3 › A01 metadata-integrity validation › detects a requirement id referenced but not documented",
+        "[api] › quality/verify-metadata.spec.js:70:3 › A01 metadata-integrity validation › detects a critical-journey test id missing from the catalog",
+        "[api] › quality/verify-metadata.spec.js:79:3 › A01 metadata-integrity validation › detects a duplicate catalog id",
+        "[api] › quality/verify-metadata.spec.js:87:3 › A01 metadata-integrity validation › run-all-checks passes on the real repository",
+        "[api] › quality/verify-metadata.spec.js:94:3 › A01 metadata-integrity validation › every requirement referenced by the real catalog/traceability is documented",
+        "[api] › quality/verify-metadata.spec.js:108:3 › A01 metadata-integrity validation › the real catalog has no duplicate IDs and every critical-journey ref resolves"
+      ]
+    }
+  ]
+}

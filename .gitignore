@@ -1,0 +1,13 @@
+node_modules/
+reports/
+playwright-report/
+test-results/
+blob-report/
+coverage/
+.env
+.env.*
+.claude/
+evaluator/
+secrets/
+*.log
+npm-debug.log*

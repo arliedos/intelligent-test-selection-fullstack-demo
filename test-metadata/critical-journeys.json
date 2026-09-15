@@ -1,0 +1,21 @@
+{
+  "description": "Critical user journeys and mandatory/protected test IDs for ShopSphere. Protected test IDs must always be included in any selected regression subset, regardless of diff scope (see docs/test-selection-policy.md).",
+  "journeys": [
+    {
+      "id": "CJ01",
+      "name": "Catalogue-to-checkout shipping quote",
+      "description": "browse catalogue -> navigate to checkout -> select customer type and items -> receive an accurate, accessible shipping quote from the real API",
+      "component_chain": [
+        "shopsphere.frontend.catalogue",
+        "shopsphere.frontend.checkout",
+        "shopsphere.server.checkout",
+        "shopsphere.server.shipping",
+        "shopsphere.config.shipping-policy"
+      ],
+      "primary_test_id": "T11",
+      "protected_test_ids": ["T01", "T05", "T11", "T12"]
+    }
+  ],
+  "protected_test_ids": ["T01", "T05", "T11", "T12"],
+  "notes": "T01 (health mandatory smoke), T05 (mandatory unique boundary/financial coverage), T11 (mandatory end-to-end UI-to-API critical journey), and T12 (mandatory accessibility semantics on the checkout journey) must never be excluded by a selection agent, independent of which files a change touches. T12 additionally carries a SYNTHETIC/fabricated flaky-history signal (test-metadata/synthetic-execution-history.json) that must not be used to justify dropping it -- see docs/test-selection-policy.md."
+}

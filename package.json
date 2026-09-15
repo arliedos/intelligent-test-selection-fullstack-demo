@@ -1,0 +1,23 @@
+{
+  "name": "shopsphere",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ShopSphere - synthetic full-stack demo app for evaluating a read-only Intelligent Test Suite Selection Agent.",
+  "engines": {
+    "node": ">=22"
+  },
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server/index.js",
+    "test": "playwright test",
+    "test:api": "playwright test --project=api",
+    "test:ui": "playwright test --project=ui",
+    "verify-metadata": "node scripts/verify-metadata.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.47.0"
+  }
+}

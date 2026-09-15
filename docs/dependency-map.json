@@ -1,0 +1,68 @@
+{
+  "description": "Directed component dependency graph for ShopSphere. Edges mean 'depends on' (caller -> callee). Frontend pages are static HTML/JS served by the same Express process as the API they call.",
+  "nodes": [
+    "shopsphere.server.health",
+    "shopsphere.server.products",
+    "shopsphere.server.checkout",
+    "shopsphere.server.shipping",
+    "shopsphere.server.profile",
+    "shopsphere.config.shipping-policy",
+    "shopsphere.frontend.catalogue",
+    "shopsphere.frontend.checkout",
+    "shopsphere.frontend.profile",
+    "scripts.verify-metadata"
+  ],
+  "edges": [
+    {
+      "from": "shopsphere.frontend.catalogue",
+      "to": "shopsphere.server.products"
+    },
+    {
+      "from": "shopsphere.frontend.checkout",
+      "to": "shopsphere.server.products"
+    },
+    {
+      "from": "shopsphere.frontend.checkout",
+      "to": "shopsphere.server.checkout"
+    },
+    {
+      "from": "shopsphere.frontend.profile",
+      "to": "shopsphere.server.profile"
+    },
+    {
+      "from": "shopsphere.server.checkout",
+      "to": "shopsphere.server.products"
+    },
+    {
+      "from": "shopsphere.server.checkout",
+      "to": "shopsphere.server.shipping"
+    },
+    {
+      "from": "shopsphere.server.shipping",
+      "to": "shopsphere.config.shipping-policy"
+    }
+  ],
+  "independent_components": [
+    "shopsphere.frontend.catalogue",
+    "shopsphere.frontend.profile",
+    "shopsphere.server.profile"
+  ],
+  "independence_caveat": "Independence above is scoped to the checkout/shipping change chain only: the catalogue and profile pages/routes do not call shopsphere.server.checkout or shopsphere.server.shipping and are not affected by a shipping-policy.json change. They are NOT independent at runtime in every sense -- all routes are served by the same single Express process (server/app.js), so a process-level crash, a change to server/app.js's shared middleware (body parsing, static file serving, the error handler), or a change to server/data/products.js (read by both the catalogue page and checkout) affects every component. Do not overclaim full runtime isolation from this graph alone.",
+  "critical_chain": [
+    "shopsphere.frontend.checkout",
+    "shopsphere.server.checkout",
+    "shopsphere.server.shipping",
+    "shopsphere.config.shipping-policy"
+  ],
+  "config_files": [
+    {
+      "path": "shipping-policy.json",
+      "loaded_by": "server/shipping.js:loadShippingPolicy (at process startup)",
+      "affects": [
+        "shopsphere.server.shipping",
+        "shopsphere.server.checkout",
+        "shopsphere.frontend.checkout"
+      ]
+    }
+  ]
+}

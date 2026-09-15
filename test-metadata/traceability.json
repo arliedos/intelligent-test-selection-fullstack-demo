@@ -1,0 +1,96 @@
+{
+  "description": "Requirement -> test-ID traceability for ShopSphere. Every requirement ID here must exist in docs/requirements.md (verified by scripts/verify-metadata.js).",
+  "requirements": {
+    "REQ-HEALTH-001": {
+      "component": "shopsphere.server.health",
+      "tests": [
+        "T01"
+      ]
+    },
+    "REQ-CATALOGUE-001": {
+      "component": "shopsphere.server.products",
+      "tests": [
+        "T02",
+        "T07"
+      ]
+    },
+    "REQ-SHIP-001": {
+      "component": "shopsphere.server.shipping",
+      "tests": [
+        "T15"
+      ]
+    },
+    "REQ-SHIP-002": {
+      "component": "shopsphere.server.shipping",
+      "tests": [
+        "T03",
+        "T08",
+        "T14"
+      ]
+    },
+    "REQ-SHIP-003": {
+      "component": "shopsphere.server.shipping",
+      "tests": [
+        "T04",
+        "T09"
+      ]
+    },
+    "REQ-SHIP-004": {
+      "component": "shopsphere.server.shipping",
+      "tests": [
+        "T03",
+        "T04",
+        "T05"
+      ]
+    },
+    "REQ-SHIP-005": {
+      "component": "shopsphere.server.shipping",
+      "tests": [
+        "T05"
+      ]
+    },
+    "REQ-CHECKOUT-VALID-001": {
+      "component": "shopsphere.server.checkout",
+      "tests": [
+        "T06"
+      ]
+    },
+    "REQ-UI-CHECKOUT-001": {
+      "component": "shopsphere.frontend.checkout",
+      "tests": [
+        "T08",
+        "T09"
+      ]
+    },
+    "REQ-UI-CHECKOUT-A11Y-001": {
+      "component": "shopsphere.frontend.checkout",
+      "tests": [
+        "T12"
+      ]
+    },
+    "REQ-PROFILE-001": {
+      "component": "shopsphere.server.profile",
+      "tests": [
+        "T10"
+      ]
+    },
+    "REQ-JOURNEY-001": {
+      "component": "shopsphere.frontend.checkout",
+      "tests": [
+        "T11"
+      ]
+    },
+    "REQ-CONTRACT-001": {
+      "component": "shopsphere.frontend.checkout",
+      "tests": [
+        "T13"
+      ]
+    },
+    "REQ-META-001": {
+      "component": "scripts.verify-metadata",
+      "tests": [
+        "A01"
+      ]
+    }
+  }
+}

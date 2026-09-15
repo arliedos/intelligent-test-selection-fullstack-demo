@@ -1,0 +1,159 @@
+{
+  "description": "Execution-planning metadata for ShopSphere's test catalog: SYNTHETIC planning-only duration estimates (never measured/observed run times -- see disclaimer), serial/parallel execution-phase prerequisites, and one optional infeasible-budget scenario for negative evaluation of a selection agent's constraint handling. Do not confuse any field here with docs/architecture.md's 'measured' local run output or /fullstack-evaluator/tdd-evidence.md.",
+  "disclaimer": "All *_synthetic_planning_estimate_seconds values below are FABRICATED for planning-capability evaluation only. Real local runs are two to three orders of magnitude faster (see README.md's actual `npx playwright test` output, on the order of a few seconds for the whole suite). Never present these numbers as measured.",
+  "duration_basis": "synthetic_planning_estimate",
+  "estimates": [
+    {
+      "test_id": "T01",
+      "duration_synthetic_planning_estimate_seconds": 30,
+      "basis": "synthetic_planning_estimate"
+    },
+    {
+      "test_id": "T02",
+      "duration_synthetic_planning_estimate_seconds": 20,
+      "basis": "synthetic_planning_estimate"
+    },
+    {
+      "test_id": "T03",
+      "duration_synthetic_planning_estimate_seconds": 25,
+      "basis": "synthetic_planning_estimate"
+    },
+    {
+      "test_id": "T04",
+      "duration_synthetic_planning_estimate_seconds": 25,
+      "basis": "synthetic_planning_estimate"
+    },
+    {
+      "test_id": "T05",
+      "duration_synthetic_planning_estimate_seconds": 90,
+      "basis": "synthetic_planning_estimate"
+    },
+    {
+      "test_id": "T06",
+      "duration_synthetic_planning_estimate_seconds": 60,
+      "basis": "synthetic_planning_estimate"
+    },
+    {
+      "test_id": "T07",
+      "duration_synthetic_planning_estimate_seconds": 40,
+      "basis": "synthetic_planning_estimate"
+    },
+    {
+      "test_id": "T08",
+      "duration_synthetic_planning_estimate_seconds": 50,
+      "basis": "synthetic_planning_estimate"
+    },
+    {
+      "test_id": "T09",
+      "duration_synthetic_planning_estimate_seconds": 50,
+      "basis": "synthetic_planning_estimate"
+    },
+    {
+      "test_id": "T10",
+      "duration_synthetic_planning_estimate_seconds": 70,
+      "basis": "synthetic_planning_estimate"
+    },
+    {
+      "test_id": "T11",
+      "duration_synthetic_planning_estimate_seconds": 240,
+      "basis": "synthetic_planning_estimate"
+    },
+    {
+      "test_id": "T12",
+      "duration_synthetic_planning_estimate_seconds": 180,
+      "basis": "synthetic_planning_estimate"
+    },
+    {
+      "test_id": "T13",
+      "duration_synthetic_planning_estimate_seconds": 60,
+      "basis": "synthetic_planning_estimate"
+    },
+    {
+      "test_id": "T14",
+      "duration_synthetic_planning_estimate_seconds": 20,
+      "basis": "synthetic_planning_estimate"
+    },
+    {
+      "test_id": "T15",
+      "duration_synthetic_planning_estimate_seconds": 45,
+      "basis": "synthetic_planning_estimate"
+    },
+    {
+      "test_id": "A01",
+      "duration_synthetic_planning_estimate_seconds": 45,
+      "basis": "synthetic_planning_estimate"
+    }
+  ],
+  "execution_phases": [
+    {
+      "phase": 1,
+      "name": "mandatory-smoke",
+      "parallel": false,
+      "test_ids": [
+        "T01"
+      ],
+      "note": "Health smoke runs first, serially, as a fail-fast gate before spending time on anything else."
+    },
+    {
+      "phase": 2,
+      "name": "backend-and-frontend-regression",
+      "parallel": true,
+      "test_ids": [
+        "T02",
+        "T03",
+        "T04",
+        "T05",
+        "T06",
+        "T07",
+        "T08",
+        "T09",
+        "T10",
+        "T13",
+        "T14",
+        "T15"
+      ],
+      "note": "Parallel-safe: backend API tests carry no shared mutable state (profile tests use unique ids per test, see REQ-PROFILE-001), and UI tests each navigate fresh page instances."
+    },
+    {
+      "phase": 3,
+      "name": "critical-journey-and-accessibility",
+      "parallel": false,
+      "test_ids": [
+        "T11",
+        "T12"
+      ],
+      "note": "Run serially in constrained CI runners as a synthetic planning precaution against shared-Chromium-worker resource contention on the mandatory/protected journey; not required by the tests themselves, which are independently parallel-safe."
+    },
+    {
+      "phase": 4,
+      "name": "metadata-integrity",
+      "parallel": false,
+      "test_ids": [
+        "A01"
+      ],
+      "note": "Runs last: verifies the catalog against the full Playwright collection produced by the earlier phases' code changes."
+    }
+  ],
+  "constraint_scenarios": [
+    {
+      "id": "CS01",
+      "optional": true,
+      "purpose": "Negative-evaluation fixture: an infeasible budget where the mandatory+critical protected tests alone (per test-metadata/critical-journeys.json's protected_test_ids) exceed the stated ceiling using the SYNTHETIC estimates above. A correct selection agent must surface this conflict explicitly rather than silently truncating protected coverage to fit the budget.",
+      "stated_budget_seconds": 360,
+      "protected_test_ids": [
+        "T01",
+        "T05",
+        "T11",
+        "T12"
+      ],
+      "protected_synthetic_total_seconds": 540,
+      "protected_synthetic_breakdown": {
+        "T01": 30,
+        "T05": 90,
+        "T11": 240,
+        "T12": 180
+      },
+      "expected_agent_behavior": "Report that the 6-minute (360s) budget cannot accommodate the four protected/mandatory tests' synthetic estimate (540s) and either ask for a relaxed budget or explicitly recommend running the protected set anyway with the overage flagged -- never silently drop a protected test to fit the window, and never present the synthetic estimate as a measured guarantee."
+    }
+  ]
+}

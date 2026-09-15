@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ShopSphere — Checkout</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <header>
+    <p><strong>ShopSphere</strong></p>
+    <nav aria-label="Main">
+      <ul>
+        <li><a href="/index.html">Catalogue</a></li>
+        <li><a href="/checkout.html">Checkout</a></li>
+        <li><a href="/profile.html">Profile</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <h1>Checkout — Shipping Quote</h1>
+
+    <form id="quote-form" data-testid="quote-form">
+      <fieldset>
+        <legend>Customer</legend>
+        <div class="field">
+          <label for="customer-type">Customer type</label>
+          <select id="customer-type" name="customerType" data-testid="customer-type">
+            <option value="standard">Standard</option>
+            <option value="loyalty">Loyalty</option>
+          </select>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Items</legend>
+        <div id="product-quantities" data-testid="product-quantities"></div>
+      </fieldset>
+
+      <button type="submit" data-testid="get-quote-button">Get shipping quote</button>
+    </form>
+
+    <p id="quote-error" data-testid="quote-error" role="alert" hidden></p>
+
+    <section id="quote-result" data-testid="quote-result" role="status" aria-label="Shipping quote result" hidden>
+      <h2>Your Shipping Quote</h2>
+      <dl>
+        <dt>Subtotal</dt>
+        <dd data-testid="quote-subtotal"></dd>
+        <dt>Shipping fee</dt>
+        <dd data-testid="quote-shipping-fee"></dd>
+        <dt>Total</dt>
+        <dd data-testid="quote-total"></dd>
+      </dl>
+      <p data-testid="quote-shipping-message"></p>
+    </section>
+  </main>
+  <script src="/js/common.js"></script>
+  <script src="/js/checkout.js"></script>
+</body>
+</html>

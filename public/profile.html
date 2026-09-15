@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ShopSphere — Profile</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <header>
+    <p><strong>ShopSphere</strong></p>
+    <nav aria-label="Main">
+      <ul>
+        <li><a href="/index.html">Catalogue</a></li>
+        <li><a href="/checkout.html">Checkout</a></li>
+        <li><a href="/profile.html">Profile</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <h1>Profile</h1>
+
+    <form id="profile-form" data-testid="profile-form">
+      <div class="field">
+        <label for="profile-name">Full name</label>
+        <input id="profile-name" name="name" type="text" data-testid="profile-name" autocomplete="name" />
+      </div>
+      <div class="field">
+        <label for="profile-email">Email address</label>
+        <input id="profile-email" name="email" type="text" inputmode="email" data-testid="profile-email" autocomplete="email" />
+      </div>
+      <button type="submit" data-testid="profile-save-button">Save profile</button>
+    </form>
+
+    <p id="profile-error" data-testid="profile-error" role="alert" hidden></p>
+    <p id="profile-confirmation" data-testid="profile-confirmation" role="status" hidden></p>
+  </main>
+  <script src="/js/common.js"></script>
+  <script src="/js/profile.js"></script>
+</body>
+</html>
