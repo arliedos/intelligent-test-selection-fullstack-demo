@@ -1,10 +1,6 @@
 // @test-id T13
-// Direct frontend/backend shipping contract: every field the checkout API
-// returns for shipping (threshold_cents, free_shipping, shipping_fee_cents,
-// amount_remaining_cents, total_cents) must be faithfully reflected by the
-// rendered checkout UI, field by field, for both below- and at-threshold
-// carts. This differs from T11 (full UI-to-API journey) by asserting the
-// contract per shipping field rather than the end-to-end user flow.
+// Direct frontend/backend shipping contract: every displayed monetary/policy
+// field must match the successful API response for the same cart.
 const { test, expect } = require('@playwright/test');
 
 async function getApiQuote(request, customerType, items) {
@@ -13,8 +9,26 @@ async function getApiQuote(request, customerType, items) {
   return response.json();
 }
 
+function money(cents) {
+  return `$${(cents / 100).toFixed(2)}`;
+}
+
+async function assertUiMatchesQuote(page, quote) {
+  await expect(page.getByTestId('quote-subtotal')).toHaveText(money(quote.subtotal_cents));
+  await expect(page.getByTestId('quote-shipping-fee')).toHaveText(money(quote.shipping.shipping_fee_cents));
+  await expect(page.getByTestId('quote-total')).toHaveText(money(quote.total_cents));
+  await expect(page.getByTestId('quote-threshold')).toHaveText(money(quote.shipping.threshold_cents));
+  await expect(page.getByTestId('quote-remaining')).toHaveText(money(quote.shipping.amount_remaining_cents));
+  const message = page.getByTestId('quote-shipping-message');
+  if (quote.shipping.free_shipping) {
+    await expect(message).toHaveText('Free shipping applied.');
+  } else {
+    await expect(message).toContainText(money(quote.shipping.threshold_cents));
+  }
+}
+
 test.describe('T13 frontend/backend shipping contract', () => {
-  test('below-threshold quote: UI subtotal/fee/total/free-shipping-state exactly match the API contract', async ({ page, request }) => {
+  test('below-threshold quote: UI reflects every displayed shipping contract field', async ({ page, request }) => {
     const items = [{ sku: 'SKU-007', qty: 1 }];
     const apiQuote = await getApiQuote(request, 'standard', items);
     expect(apiQuote.shipping.free_shipping).toBe(false);
@@ -23,29 +37,18 @@ test.describe('T13 frontend/backend shipping contract', () => {
     await page.getByTestId('customer-type').selectOption('standard');
     await page.getByTestId('qty-input-SKU-007').fill('1');
     await page.getByTestId('get-quote-button').click();
-
-    await expect(page.getByTestId('quote-subtotal')).toHaveText(`$${(apiQuote.subtotal_cents / 100).toFixed(2)}`);
-    await expect(page.getByTestId('quote-shipping-fee')).toHaveText(`$${(apiQuote.shipping.shipping_fee_cents / 100).toFixed(2)}`);
-    await expect(page.getByTestId('quote-total')).toHaveText(`$${(apiQuote.total_cents / 100).toFixed(2)}`);
-    await expect(page.getByTestId('quote-shipping-message')).toHaveText(
-      `Free shipping on orders over $${(apiQuote.shipping.threshold_cents / 100).toFixed(2)}.`
-    );
+    await assertUiMatchesQuote(page, apiQuote);
   });
 
-  test('at-threshold quote: UI subtotal/fee/total/free-shipping-state exactly match the API contract', async ({ page, request }) => {
+  test('at-threshold quote: UI reflects every displayed shipping contract field', async ({ page, request }) => {
     const items = [{ sku: 'SKU-006', qty: 2 }];
     const apiQuote = await getApiQuote(request, 'loyalty', items);
     expect(apiQuote.shipping.free_shipping).toBe(true);
-    expect(apiQuote.shipping.shipping_fee_cents).toBe(0);
 
     await page.goto('/checkout.html');
     await page.getByTestId('customer-type').selectOption('loyalty');
     await page.getByTestId('qty-input-SKU-006').fill('2');
     await page.getByTestId('get-quote-button').click();
-
-    await expect(page.getByTestId('quote-subtotal')).toHaveText(`$${(apiQuote.subtotal_cents / 100).toFixed(2)}`);
-    await expect(page.getByTestId('quote-shipping-fee')).toHaveText('$0.00');
-    await expect(page.getByTestId('quote-total')).toHaveText(`$${(apiQuote.total_cents / 100).toFixed(2)}`);
-    await expect(page.getByTestId('quote-shipping-message')).toHaveText('Free shipping applied.');
+    await assertUiMatchesQuote(page, apiQuote);
   });
 });

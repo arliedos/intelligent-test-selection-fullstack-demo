@@ -91,13 +91,13 @@ a fixed nonprivileged port, runs with `retries: 0` locally/CI,
 parallel-safe: API tests carry no shared mutable state (profile tests use
 a unique `id` per test) and UI tests each drive a fresh page.
 
-**Measured on the corrected baseline revision** (actually run, not fabricated):
+**Measured on this target revision** (actually run, not fabricated):
 ```
 $ npx playwright test
-Running 81 tests using 8 workers
-  81 passed (5.2s)
+Running 82 tests using 8 workers
+  82 passed
 ```
-81 tests are collected across 17 spec files and two projects (`api`, `ui`). See
+82 tests are collected across 17 spec files and two projects (`api`, `ui`). See
 the local evaluator-only `fullstack-evaluator/tdd-evidence.md` file (outside this repo) for the full
 red/green TDD evidence collected while building this app.
 

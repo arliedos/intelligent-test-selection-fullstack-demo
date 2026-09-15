@@ -77,8 +77,8 @@
       ],
       "owner_role": "backend-engineer",
       "selectors": [
-        "[api] › api/checkout-standard.spec.js:5:3 › T03 standard shipping threshold API › standard customer below threshold pays the flat shipping fee",
-        "[api] › api/checkout-standard.spec.js:21:3 › T03 standard shipping threshold API › standard customer at or above threshold gets free shipping"
+        "[api] › api/checkout-standard.spec.js:5:3 › T03 standard shipping threshold API › standard customer below the tiered 7500-cent threshold pays the flat shipping fee",
+        "[api] › api/checkout-standard.spec.js:22:3 › T03 standard shipping threshold API › standard customer at or above the tiered 7500-cent threshold gets free shipping"
       ]
     },
     {
@@ -135,10 +135,11 @@
       ],
       "owner_role": "backend-engineer",
       "selectors": [
-        "[api] › api/checkout-boundary.spec.js:9:3 › T05 shipping boundary and fee correctness › subtotal exactly at the threshold (5000 cents) is free shipping",
-        "[api] › api/checkout-boundary.spec.js:24:3 › T05 shipping boundary and fee correctness › subtotal one cent under the threshold (4999 cents) is not free shipping",
-        "[api] › api/checkout-boundary.spec.js:41:3 › T05 shipping boundary and fee correctness › far-below-threshold subtotal returns the correct fee and remaining amount",
-        "[api] › api/checkout-boundary.spec.js:54:3 › T05 shipping boundary and fee correctness › flat shipping fee is exactly 799 cents whenever shipping is not free"
+        "[api] › api/checkout-boundary.spec.js:11:3 › T05 shipping boundary and fee correctness › standard subtotal exactly at the tiered 7500-cent threshold is free shipping",
+        "[api] › api/checkout-boundary.spec.js:26:3 › T05 shipping boundary and fee correctness › standard subtotal one cent under the tiered 7500-cent threshold is not free shipping",
+        "[api] › api/checkout-boundary.spec.js:44:3 › T05 shipping boundary and fee correctness › loyalty subtotal exactly at its unchanged 5000-cent threshold is still free shipping",
+        "[api] › api/checkout-boundary.spec.js:59:3 › T05 shipping boundary and fee correctness › standard subtotal far below the tiered threshold reports the correct fee and remaining amount",
+        "[api] › api/checkout-boundary.spec.js:71:3 › T05 shipping boundary and fee correctness › flat shipping fee is exactly 799 cents whenever shipping is not free"
       ]
     },
     {
@@ -234,8 +235,8 @@
       ],
       "owner_role": "frontend-engineer",
       "selectors": [
-        "[ui] › ui/checkout-standard.spec.js:5:3 › T08 standard checkout shipping frontend › standard customer below threshold sees the flat shipping fee and $50 threshold messaging",
-        "[ui] › ui/checkout-standard.spec.js:20:3 › T08 standard checkout shipping frontend › standard customer at threshold sees free shipping"
+        "[ui] › ui/checkout-standard.spec.js:5:3 › T08 standard checkout shipping frontend › standard customer below the tiered threshold sees the flat fee, threshold, and remaining amount",
+        "[ui] › ui/checkout-standard.spec.js:23:3 › T08 standard checkout shipping frontend › standard customer at the tiered 7500-cent threshold sees free shipping"
       ]
     },
     {
@@ -262,8 +263,8 @@
       ],
       "owner_role": "frontend-engineer",
       "selectors": [
-        "[ui] › ui/checkout-loyalty.spec.js:5:3 › T09 loyalty checkout shipping frontend › loyalty customer below threshold sees the flat shipping fee",
-        "[ui] › ui/checkout-loyalty.spec.js:16:3 › T09 loyalty checkout shipping frontend › loyalty customer at threshold sees free shipping"
+        "[ui] › ui/checkout-loyalty.spec.js:5:3 › T09 loyalty checkout shipping frontend › loyalty customer below their unchanged threshold sees the flat fee, threshold, and remaining amount",
+        "[ui] › ui/checkout-loyalty.spec.js:19:3 › T09 loyalty checkout shipping frontend › loyalty customer at their unchanged 5000-cent threshold sees free shipping"
       ]
     },
     {
@@ -358,8 +359,8 @@
         "[ui] › ui/checkout-accessibility.spec.js:10:3 › T12 checkout accessibility semantics › checkout page exposes landmarks, labelled controls, and live regions",
         "[ui] › ui/checkout-accessibility.spec.js:23:3 › T12 checkout accessibility semantics › submitting with no items announces an accessible alert",
         "[ui] › ui/checkout-accessibility.spec.js:32:3 › T12 checkout accessibility semantics › a successful quote is announced in an accessible status region",
-        "[ui] › ui/checkout-accessibility.spec.js:42:3 › T12 checkout accessibility semantics › a network-level failure loading products shows an accessible error instead of failing silently",
-        "[ui] › ui/checkout-accessibility.spec.js:51:3 › T12 checkout accessibility semantics › a network-level failure submitting a quote shows an accessible error instead of failing silently"
+        "[ui] › ui/checkout-accessibility.spec.js:46:3 › T12 checkout accessibility semantics › a network-level failure loading products shows an accessible error instead of failing silently",
+        "[ui] › ui/checkout-accessibility.spec.js:55:3 › T12 checkout accessibility semantics › a network-level failure submitting a quote shows an accessible error instead of failing silently"
       ]
     },
     {
@@ -386,8 +387,8 @@
       ],
       "owner_role": "fullstack-engineer",
       "selectors": [
-        "[ui] › contract/shipping-contract.spec.js:17:3 › T13 frontend/backend shipping contract › below-threshold quote: UI subtotal/fee/total/free-shipping-state exactly match the API contract",
-        "[ui] › contract/shipping-contract.spec.js:35:3 › T13 frontend/backend shipping contract › at-threshold quote: UI subtotal/fee/total/free-shipping-state exactly match the API contract"
+        "[ui] › contract/shipping-contract.spec.js:31:3 › T13 frontend/backend shipping contract › below-threshold quote: UI reflects every displayed shipping contract field",
+        "[ui] › contract/shipping-contract.spec.js:43:3 › T13 frontend/backend shipping contract › at-threshold quote: UI reflects every displayed shipping contract field"
       ]
     },
     {

@@ -47,12 +47,14 @@ function renderQuoteResult(quote) {
   document.querySelector('[data-testid="quote-subtotal"]').textContent = formatCents(quote.subtotal_cents);
   document.querySelector('[data-testid="quote-shipping-fee"]').textContent = formatCents(quote.shipping.shipping_fee_cents);
   document.querySelector('[data-testid="quote-total"]').textContent = formatCents(quote.total_cents);
+  document.querySelector('[data-testid="quote-threshold"]').textContent = formatCents(quote.shipping.threshold_cents);
+  document.querySelector('[data-testid="quote-remaining"]').textContent = formatCents(quote.shipping.amount_remaining_cents);
 
   const messageEl = document.querySelector('[data-testid="quote-shipping-message"]');
   if (quote.shipping.free_shipping) {
     messageEl.textContent = 'Free shipping applied.';
   } else {
-    messageEl.textContent = `Free shipping on orders over ${formatCents(quote.shipping.threshold_cents)}.`;
+    messageEl.textContent = `Add ${formatCents(quote.shipping.amount_remaining_cents)} more to reach the ${formatCents(quote.shipping.threshold_cents)} free-shipping threshold for your customer type.`;
   }
 
   document.getElementById('quote-result').hidden = false;
